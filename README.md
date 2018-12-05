@@ -9,16 +9,21 @@ $ sqlite3 wxdata.db
 > .quit
 
 Next:
+
+Start python virtual environment:
+$ source bin/activate
+
+Create table if necessary:
 $ python3 dynamodb-create-table.py
   to create the 'WeatherData' table
 
+Clean up the data file. This removes rows with missing values and
+removes duplicate rows. It also splits the timestring into
+'yyyy-mm-dd' and 'time' cells. This will create a 'data-clean.csv' file.
 $ python3 clean-csv-file.py
-  This removes rows with missing values and removes duplicate rows.
-  It also splits the timestring into 'yyyy-mm-dd' and 'time' cells.
-  This will create a 'data-clean.csv' file.
 
+Writes data in 'data-clean.csv' to table 'WeatherData':
 $ python3 write-data.py
-  This writes data in 'data-clean.csv' to table 'WeatherData'
 
+Query the table:
 $ python3 query-dynamodb.py
-  to query the table.
