@@ -1,13 +1,25 @@
 import json
+import pandas as pd
+import sys
+
+infile  = "/home/ben/tmp/sqlite3/one-item.csv"
+outfile = "/home/ben/tmp/sqlite3/one-item.json"
 
 def create_list_from_file(filepath):
-    fh = open(filepath, "r")
-    data = fh.read()
+    # check for missing values in *.csv file
+    df = pd.read_csv(filepath)
+    df = df.dropna(how='any',axis=0)
+    if len(df) < 1:
+        #print("Missing data in *.csv file")
+        sys.exit(1) #error
+    with open(filepath) as fh:
+        next(fh) # skip first line
+        data = fh.read()
     fh.close()
     lst = data.split(',')
     new_lst = []
     for item in lst:
-        new_lst.extend(item.split())
+        new_lst.extend(item.split()) # splits on a space, which breaks up 'timestring'
     return(new_lst)
 
 def create_json_output(lst):
@@ -27,10 +39,13 @@ def create_json_output(lst):
     }
 
 def write_json_to_file(dictionary):
-    with open("/home/ben/tmp/sqlite3/one-item.json", "w") as fp:
+    with open(outfile, "w") as fp:
         json.dump(dictionary, fp)
 
-l = create_list_from_file("/home/ben/tmp/sqlite3/one-item.csv")
+
+l = create_list_from_file(infile)
+print(l)
 dct = create_json_output(l)
 # write json dictionary to file
 write_json_to_file(dct)
+sys.exit(0) #success
