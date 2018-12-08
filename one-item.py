@@ -44,7 +44,6 @@ def write_json_to_file(dictionary):
 
 
 l = create_list_from_file(infile)
-print(l)
 dct = create_json_output(l)
 # write json dictionary to file
 write_json_to_file(dct)
